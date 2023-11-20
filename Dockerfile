@@ -5,11 +5,12 @@ FROM python:3.7-slim-buster
 RUN pip install --no-cache --upgrade pip && \
     pip install --no-cache notebook
 
-# تثبيت الحزم الأساسية فقط
+# تثبيت الحزم الأساسية و curl
 RUN apt-get update && apt-get install -y \
         git \
         less \
         nano \
+        curl \ # إضافة curl هنا
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # تثبيت Bash kernel لـ Jupyter
