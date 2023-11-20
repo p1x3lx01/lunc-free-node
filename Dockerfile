@@ -34,9 +34,9 @@ RUN \
     echo 'c.NotebookApp.terminado_settings = {"shell_command":"/bin/bash"}' > .jupyter/jupyter_notebook_config.py
 
 # Download and install the latest version of Go
-RUN wget https://golang.org/dl/go1.18.1.linux-amd64.tar.gz && \
-    tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz && \
-    rm go1.18.1.linux-amd64.tar.gz
+RUN wget https://go.dev/dl/go1.21.4.src.tar.gz && \
+    tar -C /usr/local -xzf go1.21.4.src.tar.gz && \
+    rm go1.21.4.src.tar.gz
 
 ENV PATH="/usr/local/go/bin:${PATH}"
 
