@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
         git \
         less \
         nano \
-        curl && \ # تأكد من عدم وجود خطأ في تنسيق هذا السطر
+        curl && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # تثبيت Bash kernel لـ Jupyter
