@@ -41,15 +41,8 @@ RUN wget https://go.dev/dl/go1.21.4.src.tar.gz && \
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Create user 'lunc' with a home directory
-ARG NB_USER=lunc
-ARG NB_UID=1000
-ENV USER ${NB_USER}
-ENV HOME /home/${NB_USER}
+# حدد مسار عمل الحاوية
+WORKDIR /home/jovyan
 
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-
-WORKDIR ${HOME}
-USER ${USER}
+# نقطة الدخول لـ Jupyter Notebook
+ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0"]
