@@ -1,15 +1,13 @@
-FROM python:3.7.9-stretch
+# استخدام صورة الأساس من Python
+FROM python:3.7-buster
 
-# Install notebook package
+# تحديث pip وتثبيت Jupyter Notebook
 RUN pip install --no-cache --upgrade pip && \
     pip install --no-cache notebook
 
-# Install system packages
-RUN set -x && \
-    apt-get update && \
-    apt install -y \
+# تثبيت حزم النظام الأساسية
+RUN apt-get update && apt-get install -y \
         bash-completion \
-        dictionaries-common \
         emacs-nox \
         git \
         htop \
@@ -21,8 +19,8 @@ RUN set -x && \
         sudo \
         tmux \
         vim-tiny \
-    && \
-    apt-get clean  &&  rm -r /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 
 # Install Bash kernel for Jupyter
 RUN pip install bash_kernel
