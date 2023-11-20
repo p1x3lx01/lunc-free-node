@@ -1,46 +1,37 @@
-# استخدام صورة الأساس من Python
-FROM python:3.7-buster
+# استخدام صورة الأساس الخفيفة من Python
+FROM python:3.7-slim-buster
 
 # تحديث pip وتثبيت Jupyter Notebook
 RUN pip install --no-cache --upgrade pip && \
     pip install --no-cache notebook
 
-# تثبيت حزم النظام الأساسية
+# تثبيت الحزم الأساسية فقط
 RUN apt-get update && apt-get install -y \
-        bash-completion \
-        emacs-nox \
         git \
-        htop \
         less \
-        man-db manpages \
         nano \
-        psmisc \
-        screen \
-        sudo \
-        tmux \
-        vim-tiny \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# تثبيت Bash kernel لـ Jupyter
+RUN pip install bash_kernel && \
+    python -m bash_kernel.install
 
-# Install Bash kernel for Jupyter
-RUN pip install bash_kernel
+# تحديد إصدار Go
+ARG GOVERS=1.21.4
 
-# Set Bash as the default shell
-RUN \
-    sudo ln -sf /bin/bash /bin/sh && \
-    mkdir .jupyter && \
-    echo 'c.NotebookApp.terminado_settings = {"shell_command":"/bin/bash"}' > .jupyter/jupyter_notebook_config.py
+# تنزيل وتثبيت Go
+RUN curl -O -L https://golang.org/dl/go${GOVERS}.linux-amd64.tar.gz && \
+    mkdir -p /usr/local/go/$GOVERS && \
+    tar -C /usr/local/go/$GOVERS -zxf go${GOVERS}.linux-amd64.tar.gz && \
+    rm go${GOVERS}.linux-amd64.tar.gz
 
-# Download and install the latest version of Go
-RUN wget https://go.dev/dl/go1.21.4.src.tar.gz && \
-    tar -C /usr/local -xzf go1.21.4.src.tar.gz && \
-    rm go1.21.4.src.tar.gz
+# تحديد متغيرات البيئة لـ Go
+ENV GOROOT=/usr/local/go/$GOVERS/go \
+    GOPATH=/home/go \
+    PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
-ENV PATH="/usr/local/go/bin:${PATH}"
-
-# Create user 'lunc' with a home directory
 # حدد مسار عمل الحاوية
 WORKDIR /home/jovyan
 
 # نقطة الدخول لـ Jupyter Notebook
-ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0"]
+ENTRYPOINT ["jupyter", "notebook", "--ip=0.0.0.0", "--NotebookApp.token=''", "--NotebookApp.password=''"]
