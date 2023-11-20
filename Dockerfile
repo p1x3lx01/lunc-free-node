@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
         git \
         less \
         nano \
-        curl \ # إضافة curl هنا
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+        curl && \ # تأكد من عدم وجود خطأ في تنسيق هذا السطر
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # تثبيت Bash kernel لـ Jupyter
 RUN pip install bash_kernel && \
